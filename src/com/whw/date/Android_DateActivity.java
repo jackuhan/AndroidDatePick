@@ -5,6 +5,7 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class Android_DateActivity extends Activity implements OnClickListener {
 		DatePicker dp = findDatePicker((ViewGroup) mdialog.getWindow()
 				.getDecorView());// 设置弹出年月日
 		if (dp != null) {
-            // 设置弹出年，隐藏月和日，getChildAt(0)为年，getChildAt(1)为日
+            // 设置弹出年，隐藏月和日，getChildAt(0)为年，getChildAt(1)为月，getChildAt(2)为日
 			if (SDKVersion < 11) {
 				((ViewGroup) dp.getChildAt(0)).getChildAt(1).setVisibility(
 						View.GONE);
@@ -62,8 +63,8 @@ public class Android_DateActivity extends Activity implements OnClickListener {
 		switch (id) {
 		case 0:
 			calendar = Calendar.getInstance();
-			mdialog = new DatePickerDialog(this,
-					new DatePickerDialog.OnDateSetListener() {
+			mdialog = new CustomerDatePickerDialog(this,//CustomerDatePickerDialog--DatePickerDialog互换
+					new CustomerDatePickerDialog.OnDateSetListener() {//CustomerDatePickerDialog--DatePickerDialog互换
 						@Override
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
@@ -76,6 +77,25 @@ public class Android_DateActivity extends Activity implements OnClickListener {
 		}
 		return mdialog;
 	}
+
+    /**
+     * 发现标题栏也要改，通过查看DatePickerDialog源码，需要自定义并实现onDateChanged方法才可实现
+     * CustomerDatePickerDialog--DatePickerDialog互换
+     *  */
+    class CustomerDatePickerDialog extends DatePickerDialog {
+
+        public CustomerDatePickerDialog(Context context,
+                                        OnDateSetListener callBack, int year, int monthOfYear,
+                                        int dayOfMonth) {
+            super(context, callBack, year, monthOfYear, dayOfMonth);
+        }
+
+        @Override
+        public void onDateChanged(DatePicker view, int year, int month, int day) {
+            super.onDateChanged(view, year, month, day);
+            mdialog.setTitle(year + "年");
+        }
+    }
 
 	/**
 	 * 从当前Dialog中查找DatePicker子控件
