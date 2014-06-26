@@ -31,20 +31,20 @@ public class Android_DateActivity extends Activity implements OnClickListener {
 		button.setOnClickListener(this);
 	}
 
-	public void initUi() {
+	private void initUi() {
 		button = (Button) findViewById(R.id.button);
 		textview = (TextView) findViewById(R.id.textview);
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		showDialog(0);// 日期弹出框
 		int SDKVersion = Android_DateActivity.this.getSDKVersionNumber();// 获取系统版本
 		System.out.println("SDKVersion = " + SDKVersion);
 		DatePicker dp = findDatePicker((ViewGroup) mdialog.getWindow()
 				.getDecorView());// 设置弹出年月日
 		if (dp != null) {
+            // 设置弹出年，隐藏月和日，getChildAt(0)为年，getChildAt(1)为日
 			if (SDKVersion < 11) {
 				((ViewGroup) dp.getChildAt(0)).getChildAt(1).setVisibility(
 						View.GONE);
